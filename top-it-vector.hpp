@@ -36,7 +36,7 @@ topit::Vector< T >::~Vector()
 template < class T >
 bool topit::Vector< T >::isEmpty() const noexcept
 {
-  return false;
+  return !size_;
 }
 
 #endif
