@@ -1,7 +1,10 @@
-CXXFLAGS += -std=c++14 -Wall -Wextra -Weffc++
+CXXFLAGS += -std=c++14 -Wall -Wextra -Weffc++ -MMD
+
 
 top-vec: main.o
-	g++ -o $@ $^
+	$(CXX) -o $@ $^
+
+-include main.d
 
 clean:
-	rm -rf *.o top-vec
+	$(RM) -rf *.d *.o top-vec
