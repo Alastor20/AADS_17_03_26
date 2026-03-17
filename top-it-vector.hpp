@@ -13,6 +13,7 @@ namespace topit
     Vector< T > &operator=(const Vector< T > &) = delete;
     ~Vector();
     bool isEmpty() const noexcept;
+    void pushBack(const T &) {};
 
   private:
     T *data_;
