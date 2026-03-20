@@ -17,8 +17,8 @@ namespace topit
     const T &operator[](size_t id) const noexcept;
     ~Vector();
     bool isEmpty() const noexcept;
-    void pushBack(const T &) {};
-    void popBack() noexcept {};
+    void pushBack(const T &);
+    void popBack();
     size_t getSize() const noexcept;
     size_t getCapasity() const noexcept;
     void swap(Vector< T > &rhs) noexcept;
@@ -117,7 +117,29 @@ void topit::Vector< T >::pushFront(const T &val)
   swap(cpy);
 }
 
-// template < class T >
-//  void topit::Vector< T >::pushBack(const T &val)
-//{}
+template < class T >
+void topit::Vector< T >::pushBack(const T &val)
+{
+  if (size_ == capasity_) {
+    if (!size_) {
+      capasity_ = 10;
+    }
+    Vector< T > cpy(size_ ? size_ * 2 : 20);
+    for (size_t i = 0; i < size_; ++i) {
+      cpy[i] = (*this)[i];
+    }
+    capasity_ *= 2;
+    swap(cpy);
+  }
+  data_[size_] = val;
+  ++size_;
+}
+
+template < class T >
+void topit::Vector< T >::popBack()
+{
+  assert(size_ > 1);
+  --size_;
+  data_[size_] = 0;
+}
 #endif
