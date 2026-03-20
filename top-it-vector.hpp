@@ -18,7 +18,9 @@ namespace topit
     ~Vector();
     bool isEmpty() const noexcept;
     void pushBack(const T &) {};
-    size_t size() const noexcept;
+    void popBack() noexcept {};
+    size_t getSize() const noexcept;
+    size_t getCapasity() const noexcept;
     void swap(Vector< T > &rhs) noexcept;
     void pushFront(const T &);
 
@@ -38,7 +40,7 @@ topit::Vector< T >::Vector():
 
 template < class T >
 topit::Vector< T >::Vector(const Vector< T > &rhs):
-  Vector(rhs.size())
+  Vector(rhs.getSize())
 {
   for (size_t i = 0; i < size_; ++i) {
     data_[i] = rhs[i];
@@ -48,7 +50,7 @@ topit::Vector< T >::Vector(const Vector< T > &rhs):
 template < class T >
 T &topit::Vector< T >::operator[](size_t id) noexcept
 {
-  assert(id < size());
+  assert(id < getSize());
   return data_[0];
 }
 
@@ -85,9 +87,15 @@ bool topit::Vector< T >::isEmpty() const noexcept
 }
 
 template < class T >
-size_t topit::Vector< T >::size() const noexcept
+size_t topit::Vector< T >::getSize() const noexcept
 {
   return size_;
+}
+
+template < class T >
+size_t topit::Vector< T >::getCapasity() const noexcept
+{
+  return 0;
 }
 
 template < class T >
@@ -103,10 +111,13 @@ void topit::Vector< T >::pushFront(const T &val)
 {
   Vector< T > cpy(val.size() + 1);
   cpy[0] = val;
-  for (size_t i = 0; i < cpy.size(); ++i) {
+  for (size_t i = 0; i < cpy.getSize(); ++i) {
     cpy[i] = (*this)[i - 1];
   }
   swap(cpy);
 }
 
+// template < class T >
+//  void topit::Vector< T >::pushBack(const T &val)
+//{}
 #endif

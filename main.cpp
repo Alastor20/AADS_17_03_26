@@ -14,13 +14,29 @@ bool testVectorWithValue()
   return !v.isEmpty();
 }
 
+bool testSize()
+{
+  topit::Vector< int > v;
+  v.pushBack(1);
+  return v.getSize() == 1;
+}
+
+bool testCapasity()
+{
+  topit::Vector< int > v;
+  v.pushBack(1);
+  v.pushBack(1);
+  v.popBack();
+  return v.getCapasity();
+}
+
 bool testCopyConstructor()
 {
   topit::Vector< int > v;
   v.pushBack(1);
   topit::Vector< int > yav = v;
-  bool isAllEqual = v.size() == yav.size();
-  for (size_t i = 0; i < v.size() && isAllEqual; ++i) {
+  bool isAllEqual = v.getSize() == yav.getSize();
+  for (size_t i = 0; i < v.getSize() && isAllEqual; ++i) {
     isAllEqual = isAllEqual && v[i] == yav[i];
   }
   return isAllEqual;
@@ -40,7 +56,9 @@ int main()
   using pair_t = std::pair< const char *, test_t >;
   pair_t tests[] = {
       {"Default vector should be empty", testDefaultVector},
-      //     {"Not Empty", testVectorWithValue},
+      {"Vector with any value is not empty", testVectorWithValue},
+      {"Vector should change size on push", testSize},
+      {"Vector shoud keep cap after pop", testCapasity},
       {"Test correct accses to elements", testElementAccses},
       {"Vectors should be equal", testCopyConstructor},
   };
