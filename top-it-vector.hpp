@@ -51,14 +51,14 @@ template < class T >
 T &topit::Vector< T >::operator[](size_t id) noexcept
 {
   assert(id < getSize());
-  return data_[0];
+  return data_[id];
 }
 
 template < class T >
 const T &topit::Vector< T >::operator[](size_t id) const noexcept
 {
   assert(id < size_);
-  return data_[0];
+  return data_[id];
 }
 template < class T >
 topit::Vector< T >::Vector(size_t k):
@@ -124,12 +124,13 @@ void topit::Vector< T >::pushBack(const T &val)
     if (!size_) {
       capasity_ = 10;
     }
-    Vector< T > cpy(size_ ? size_ * 2 : 20);
+    T *tmp = new T[size_ ? size_ * 2 : 20];
     for (size_t i = 0; i < size_; ++i) {
-      cpy[i] = (*this)[i];
+      tmp[i] = (*this)[i];
     }
     capasity_ *= 2;
-    swap(cpy);
+    std::swap(data_, tmp);
+    delete[] tmp;
   }
   data_[size_] = val;
   ++size_;
