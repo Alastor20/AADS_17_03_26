@@ -95,7 +95,7 @@ size_t topit::Vector< T >::getSize() const noexcept
 template < class T >
 size_t topit::Vector< T >::getCapasity() const noexcept
 {
-  return 0;
+  return capasity_;
 }
 
 template < class T >
