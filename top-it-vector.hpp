@@ -141,6 +141,5 @@ void topit::Vector< T >::popBack()
 {
   assert(size_ > 1);
   --size_;
-  data_[size_] = 0;
 }
 #endif
