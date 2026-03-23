@@ -109,12 +109,24 @@ void topit::Vector< T >::swap(Vector< T > &rhs) noexcept
 template < class T >
 void topit::Vector< T >::pushFront(const T &val)
 {
-  Vector< T > cpy(val.size() + 1);
-  cpy[0] = val;
-  for (size_t i = 0; i < cpy.getSize(); ++i) {
-    cpy[i] = (*this)[i - 1];
+  if (size_ == capasity_) {
+    if (!size_) {
+      capasity_ = 10;
+    }
+    T *tmp = new T[size_ ? size_ * 2 : 20];
+    for (size_t i = 1; i < size_; ++i) {
+      tmp[i] = (*this)[i - 1];
+    }
+    capasity_ *= 2;
+    std::swap(tmp, data_);
+    delete[] tmp;
+  } else {
+    for (size_t i = 0; i < size_; ++i) {
+      data_[size_ - i] = data_[size_ - i - 1];
+    }
   }
-  swap(cpy);
+  data_[0] = val;
+  ++size_;
 }
 
 template < class T >
