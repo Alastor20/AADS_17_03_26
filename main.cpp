@@ -50,18 +50,25 @@ bool testElementAccses()
   return (v[0] == 1) && (v[1] == 2);
 }
 
+bool testPushFront()
+{
+  topit::Vector< int > v;
+  v.pushFront(1);
+  v.pushFront(2);
+  return v[0] == 2 && v[1] == 1;
+}
+
 int main()
 {
   using test_t = bool (*)();
   using pair_t = std::pair< const char *, test_t >;
-  pair_t tests[] = {
-      {"Default vector should be empty", testDefaultVector},
-      {"Vector with any value is not empty", testVectorWithValue},
-      {"Vector should change size on push", testSize},
-      {"Vector shoud keep cap after pop", testCapasity},
-      {"Test correct accses to elements", testElementAccses},
-      {"Vectors should be equal", testCopyConstructor},
-  };
+  pair_t tests[] = {{"Default vector should be empty", testDefaultVector},
+                    {"Vector with any value is not empty", testVectorWithValue},
+                    {"Vector should change size on push", testSize},
+                    {"Vector shoud keep cap after pop", testCapasity},
+                    {"Test correct accses to elements", testElementAccses},
+                    {"Vectors should be equal", testCopyConstructor},
+                    {"Push front should paste in begining of vector", testPushFront}};
   const size_t count = sizeof(tests) / sizeof(pair_t);
   std::cout << std::boolalpha;
   bool pass = true;
