@@ -134,9 +134,9 @@ void topit::Vector< T >::pushBack(const T &val)
 {
   if (size_ == capasity_) {
     if (!size_) {
-      capasity_ = 10;
+      capasity_ = 1;
     }
-    T *tmp = new T[size_ ? size_ * 2 : 20];
+    T *tmp = new T[size_ ? size_ * 2 : 2];
     for (size_t i = 0; i < size_; ++i) {
       tmp[i] = (*this)[i];
     }
