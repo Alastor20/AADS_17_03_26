@@ -27,8 +27,13 @@ namespace topit
     size_t getCapasity() const noexcept;
     void swap(Vector< T > &rhs) noexcept;
     void pushFront(const T &);
+    void popFront();
     T &at(size_t id);
     const T &at(size_t id) const;
+    void insert(size_t i, const T &val);
+    void erase(size_t i);
+    void insert(size_t i, const Vector< T > &rhs, size_t beg, size_t end);
+    void erase(size_t beg, size_t end);
 
   private:
     T *data_;
@@ -189,16 +194,16 @@ template < class T >
 T &topit::Vector< T >::at(size_t id)
 {
   if (id < getSize()) {
-    return data_[0];
+    return data_[id];
   }
-  throw std::range_error("bad id");
+  throw std::out_of_range("bad id");
 }
 template < class T >
 const T &topit::Vector< T >::at(size_t id) const
 {
   if (id < getSize()) {
-    return data_[0];
+    return data_[id];
   }
-  throw std::range_error("bad id");
+  throw std::out_of_range("bad id");
 }
 #endif
