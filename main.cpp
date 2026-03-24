@@ -165,9 +165,13 @@ int main()
       {"Vector shoud keep cap after pop", testCapasityStay},
       {"Pop shold change size", testPop},
       {"Test correct accses to elements", testElementAccses},
+      {"Const thing", testAccsesConst},
       {"swap should swap vectors", testSwap},
       {"Vectors should be equal", testCopyConstructor},
-      {"Const thing", testAccsesConst},
+      {"save accses out of bounds", testCheckAccsesOut},
+      {"const var", testCheckAccsesOutConst},
+      {"save accses in bounds", testCheckAccsesIn},
+      {"const var", testCheckAccsesInConst},
   };
   const size_t count = sizeof(tests) / sizeof(pair_t);
   std::cout << std::boolalpha;
