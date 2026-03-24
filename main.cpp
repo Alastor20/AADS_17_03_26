@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdexcept>
 #include <utility>
 #include "top-it-vector.hpp"
 
@@ -84,6 +85,65 @@ bool testElementAccses()
   return (v[0] == 1) && (v[1] == 2);
 }
 
+bool testAccsesConst()
+{
+  topit::Vector< int > v;
+  v.pushBack(1);
+  v.pushBack(2);
+  const topit::Vector< int > rv = v;
+  return (rv[0] == 1 && rv[1] == 2);
+}
+
+bool testCheckAccsesOut()
+{
+  topit::Vector< int > v;
+  try {
+    v.at(0);
+    return false;
+  } catch (const std::out_of_range &) {
+    return true;
+  } catch (...) {
+    return false;
+  }
+}
+
+bool testCheckAccsesIn()
+{
+  topit::Vector< int > v;
+  v.pushBack(1);
+  try {
+    int &val = v.at(0);
+    return val == 1;
+  } catch (...) {
+    return false;
+  }
+}
+
+bool testCheckAccsesOutConst()
+{
+  const topit::Vector< int > v;
+  try {
+    v.at(0);
+    return false;
+  } catch (const std::out_of_range &) {
+    return true;
+  } catch (...) {
+    return false;
+  }
+}
+
+bool testCheckAccsesInConst()
+{
+  topit::Vector< int > v;
+  v.pushBack(1);
+  const topit::Vector< int > rv = v;
+  try {
+    const int &val = rv.at(0);
+    return val == 1;
+  } catch (...) {
+    return false;
+  }
+}
 bool testPushFront()
 {
   topit::Vector< int > v;
@@ -107,6 +167,7 @@ int main()
       {"Test correct accses to elements", testElementAccses},
       {"swap should swap vectors", testSwap},
       {"Vectors should be equal", testCopyConstructor},
+      {"Const thing", testAccsesConst},
   };
   const size_t count = sizeof(tests) / sizeof(pair_t);
   std::cout << std::boolalpha;

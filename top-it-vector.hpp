@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstddef>
 #include <memory>
+#include <stdexcept>
 #include <utility>
 
 namespace topit
@@ -26,6 +27,8 @@ namespace topit
     size_t getCapasity() const noexcept;
     void swap(Vector< T > &rhs) noexcept;
     void pushFront(const T &);
+    T &at(size_t id);
+    const T &at(size_t id) const;
 
   private:
     T *data_;
@@ -180,5 +183,22 @@ void topit::Vector< T >::popBack()
 {
   assert(size_ > 1);
   --size_;
+}
+
+template < class T >
+T &topit::Vector< T >::at(size_t id)
+{
+  if (id < getSize()) {
+    return data_[0];
+  }
+  throw std::range_error("bad id");
+}
+template < class T >
+const T &topit::Vector< T >::at(size_t id) const
+{
+  if (id < getSize()) {
+    return data_[0];
+  }
+  throw std::range_error("bad id");
 }
 #endif
