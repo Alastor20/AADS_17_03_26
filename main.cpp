@@ -26,8 +26,25 @@ bool testCapasity()
   topit::Vector< int > v;
   v.pushBack(1);
   v.pushBack(1);
+  return v.getSize() == 2;
+}
+
+bool testCapasityStay()
+{
+  topit::Vector< int > v;
+  v.pushBack(1);
+  v.pushBack(1);
   v.popBack();
-  return v.getCapasity();
+  return v.getCapasity() == 2;
+}
+
+bool testPop()
+{
+  topit::Vector< int > v;
+  v.pushBack(1);
+  v.pushBack(1);
+  v.popBack();
+  return v.getSize() == 1;
 }
 
 bool testCopyConstructor()
@@ -40,6 +57,23 @@ bool testCopyConstructor()
     isAllEqual = isAllEqual && v[i] == yav[i];
   }
   return isAllEqual;
+}
+
+bool testCopyOper()
+{
+  topit::Vector< int > v, vv;
+  v.pushBack(1);
+  vv = v;
+  return v[0] == 1 && vv[0] == 1;
+}
+
+bool testSwap()
+{
+  topit::Vector< int > v, vv;
+  v.pushBack(1);
+  vv.pushBack(2);
+  v.swap(vv);
+  return v[0] == 2;
 }
 
 bool testElementAccses()
@@ -62,13 +96,18 @@ int main()
 {
   using test_t = bool (*)();
   using pair_t = std::pair< const char *, test_t >;
-  pair_t tests[] = {{"Default vector should be empty", testDefaultVector},
-                    {"Vector with any value is not empty", testVectorWithValue},
-                    {"Vector should change size on push", testSize},
-                    {"Vector shoud keep cap after pop", testCapasity},
-                    {"Test correct accses to elements", testElementAccses},
-                    {"Vectors should be equal", testCopyConstructor},
-                    {"Push front should paste in begining of vector", testPushFront}};
+  pair_t tests[] = {
+      {"Default vector should be empty", testDefaultVector},
+      {"Vector with any value is not empty", testVectorWithValue},
+      {"Vector should change size on push", testSize},
+      {"getCap should return actual cap", testCapasity},
+      {"copy should not change origin", testCopyOper},
+      {"Vector shoud keep cap after pop", testCapasityStay},
+      {"Pop shold change size", testPop},
+      {"Test correct accses to elements", testElementAccses},
+      {"swap should swap vectors", testSwap},
+      {"Vectors should be equal", testCopyConstructor},
+  };
   const size_t count = sizeof(tests) / sizeof(pair_t);
   std::cout << std::boolalpha;
   bool pass = true;
