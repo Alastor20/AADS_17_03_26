@@ -350,6 +350,24 @@ topit::VIter< T > &topit::VIter< T >::operator++() noexcept
   ++pos_;
   return *this;
 }
+
+template < class T >
+const T &topit::VCIter< T >::operator*()
+{
+  if (pos_ >= v_.getSize()) {
+    throw std::out_of_range("Pos of iter more than size of vector");
+  }
+  return v_[pos_];
+}
+
+template < class T >
+T &topit::VIter< T >::operator*()
+{
+  if (pos_ >= v_.getSize()) {
+    throw std::out_of_range("Pos of iter more than size of vector");
+  }
+  return v_[pos_];
+}
 template < class T >
 topit::VCIter< T > topit::Vector< T >::cbegin() const
 {
