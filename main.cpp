@@ -189,6 +189,28 @@ bool testInsert()
   return v[1] == 3;
 }
 
+bool testInsertRange()
+{
+  topit::Vector< int > v, yav;
+  v.pushBack(1);
+  v.pushBack(2);
+  yav.pushBack(3);
+  yav.pushBack(4);
+  v.insert(1, yav, 0, 2);
+  return v[1] == 3 && v[2] == 4 && v.getSize() == 4;
+}
+
+bool testEraseRange()
+{
+  topit::Vector< int > v;
+  v.pushBack(1);
+  v.pushBack(2);
+  v.pushBack(3);
+  v.pushBack(4);
+  v.erase(1, 3);
+  return v[0] == 1 && v[1] == 4 && v.getSize() == 2;
+}
+
 int main()
 {
   using test_t = bool (*)();
@@ -212,6 +234,8 @@ int main()
       {"You cant insert past size+1", testInsertOutOfRange},
       {"You cant erase past size+1", testEraseOutOfRange},
       {"insert should actualy insert value", testInsert},
+      {"insert shuld actualy insert range in pos", testInsertRange},
+      {"erase should actualy erase range", testEraseRange},
   };
   const size_t count = sizeof(tests) / sizeof(pair_t);
   std::cout << std::boolalpha;
