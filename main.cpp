@@ -152,6 +152,43 @@ bool testPushFront()
   return v[0] == 2 && v[1] == 1;
 }
 
+bool testInsertOutOfRange()
+{
+  try {
+    topit::Vector< int > v;
+    v.pushBack(1);
+    v.insert(2, 2);
+  } catch (const std::out_of_range &) {
+    return true;
+  } catch (...) {
+    return false;
+  }
+  return false;
+}
+
+bool testEraseOutOfRange()
+{
+  try {
+    topit::Vector< int > v;
+    v.pushBack(1);
+    v.erase(2);
+  } catch (const std::out_of_range &) {
+    return true;
+  } catch (...) {
+    return false;
+  }
+  return false;
+}
+
+bool testInsert()
+{
+  topit::Vector< int > v;
+  v.pushBack(1);
+  v.pushBack(2);
+  v.insert(1, 3);
+  return v[1] == 3;
+}
+
 int main()
 {
   using test_t = bool (*)();
@@ -172,6 +209,9 @@ int main()
       {"const var", testCheckAccsesOutConst},
       {"save accses in bounds", testCheckAccsesIn},
       {"const var", testCheckAccsesInConst},
+      {"You cant insert past size+1", testInsertOutOfRange},
+      {"You cant erase past size+1", testEraseOutOfRange},
+      {"insert should actualy insert value", testInsert},
   };
   const size_t count = sizeof(tests) / sizeof(pair_t);
   std::cout << std::boolalpha;
