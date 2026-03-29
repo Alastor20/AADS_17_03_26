@@ -322,6 +322,34 @@ void topit::Vector< T >::erase(size_t beg, size_t end)
   }
   swap(cpy);
 }
+
+template < class T >
+topit::VCIter< T > &topit::VCIter< T >::operator--() noexcept
+{
+  --pos_;
+  return *this;
+}
+
+template < class T >
+topit::VIter< T > &topit::VIter< T >::operator--() noexcept
+{
+  --pos_;
+  return *this;
+}
+
+template < class T >
+topit::VCIter< T > &topit::VCIter< T >::operator++() noexcept
+{
+  ++pos_;
+  return *this;
+}
+
+template < class T >
+topit::VIter< T > &topit::VIter< T >::operator++() noexcept
+{
+  ++pos_;
+  return *this;
+}
 template < class T >
 topit::VCIter< T > topit::Vector< T >::cbegin() const
 {
