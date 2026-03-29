@@ -237,4 +237,52 @@ void topit::Vector< T >::erase(size_t i)
   }
   swap(cpy);
 }
+
+template < class T >
+void topit::Vector< T >::insert(size_t i, const Vector< T > &rhs, size_t beg, size_t end)
+{
+  if (i > size_) {
+    throw std::out_of_range("index out of range");
+  }
+  if (end > rhs.getSize()) {
+    throw std::range_error("end index more than size of rhs");
+  }
+  if (end < beg) {
+    throw std::range_error("end less than begin");
+  }
+  size_t toAdd = end - beg;
+  Vector< int > cpy(size_ + toAdd);
+  for (size_t j = 0; j < i; ++j) {
+    cpy[j] = (*this)[j];
+  }
+  for (size_t j = i; j < i + toAdd; ++j) {
+    cpy[j] = rhs[beg + j - i];
+  }
+  for (size_t j = i + toAdd; j < cpy.getSize(); ++j) {
+    cpy[j] = (*this)[j - toAdd];
+  }
+  swap(cpy);
+}
+template < class T >
+void topit::Vector< T >::erase(size_t beg, size_t end)
+{
+  if (!size_) {
+    throw std::out_of_range("empty vector");
+  }
+  if (end > size_) {
+    throw std::range_error("end is greater than size");
+  }
+  if (beg > end) {
+    throw std::range_error("begin is greater than end");
+  }
+  size_t toRemove = end - beg;
+  Vector< T > cpy(size_ - toRemove);
+  for (size_t i = 0; i < beg; ++i) {
+    cpy[i] = (*this)[i];
+  }
+  for (size_t i = beg; i < cpy.getSize(); ++i) {
+    cpy[i] = (*this)[i + toRemove];
+  }
+  swap(cpy);
+}
 #endif
