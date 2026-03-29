@@ -368,6 +368,31 @@ T &topit::VIter< T >::operator*()
   }
   return v_[pos_];
 }
+
+template < class T >
+bool topit::VCIter< T >::operator==(const VCIter< T > &rhs) const noexcept
+{
+  return (std::addressof(this->v_) == std::addressof(rhs.v_)) && (this->pos_ == rhs.pos_);
+}
+
+template < class T >
+bool topit::VCIter< T >::operator!=(const VCIter< T > &rhs) const noexcept
+{
+  return !(*this == rhs);
+}
+
+template < class T >
+bool topit::VIter< T >::operator==(const VIter< T > &rhs) const noexcept
+{
+  return (std::addressof(this->v_) == std::addressof(rhs.v_)) && (this->pos_ == rhs.pos_);
+}
+
+template < class T >
+bool topit::VIter< T >::operator!=(const VIter< T > &rhs) const noexcept
+{
+  return !(*this == rhs);
+}
+
 template < class T >
 topit::VCIter< T > topit::Vector< T >::cbegin() const
 {
