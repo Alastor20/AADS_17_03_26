@@ -204,4 +204,37 @@ const T &topit::Vector< T >::at(size_t id) const
   }
   throw std::out_of_range("bad id");
 }
+
+template < class T >
+void topit::Vector< T >::insert(size_t i, const T &val)
+{
+  if (i > size_) {
+    throw std::out_of_range("index out of range");
+  }
+  Vector< T > cpy(size_ + 1);
+  for (size_t j = 0; j < i; ++j) {
+    cpy[j] = (*this)[j];
+  }
+  cpy[i] = val;
+  for (size_t j = i + 1; j < cpy.getSize(); ++j) {
+    cpy[j] = (*this)[j - 1];
+  }
+  swap(cpy);
+}
+
+template < class T >
+void topit::Vector< T >::erase(size_t i)
+{
+  if (i >= size_) {
+    throw std::out_of_range("index out of range");
+  }
+  Vector< T > cpy(size_ - 1);
+  for (size_t j = 0; j < i; ++j) {
+    cpy[j] = (*this)[j];
+  }
+  for (size_t j = i + 1; j < size_; ++j) {
+    cpy[j - 1] = (*this)[j];
+  }
+  swap(cpy);
+}
 #endif
