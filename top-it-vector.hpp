@@ -192,7 +192,9 @@ void topit::Vector< T >::pushFront(const T &val)
 template < class T >
 void topit::Vector< T >::popFront()
 {
-  assert(size_ > 1);
+  if (size_ < 1) {
+    throw std::out_of_range("empty vector");
+  }
   for (size_t i = 0; i < size_ - 1; ++i) {
     data_[i] = data_[i + 1];
   }
@@ -221,7 +223,10 @@ void topit::Vector< T >::pushBack(const T &val)
 template < class T >
 void topit::Vector< T >::popBack()
 {
-  assert(size_ > 1);
+
+  if (size_ < 1) {
+    throw std::out_of_range("empty vector");
+  }
   --size_;
 }
 
