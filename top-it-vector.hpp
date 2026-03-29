@@ -40,6 +40,36 @@ namespace topit
     size_t size_, capasity_;
     explicit Vector(size_t k);
   };
+
+  template < class T >
+  struct VIter
+  {
+    explicit VIter(Vector< T > &v, size_t pos);
+    bool operator==(const VIter< T > &) const noexcept;
+    bool operator!=(const VIter< T > &) const noexcept;
+    VIter< T > &operator++() noexcept;
+    VIter< T > &operator--() noexcept;
+    T &operator*();
+
+  private:
+    Vector< T > &v_;
+    size_t pos_;
+  };
+
+  template < class T >
+  struct VCIter
+  {
+    explicit VCIter(const Vector< T > &v, size_t pos);
+    bool operator==(const VCIter< T > &) const noexcept;
+    bool operator!=(const VCIter< T > &) const noexcept;
+    VCIter< T > &operator++() noexcept;
+    VCIter< T > &operator--() noexcept;
+    const T &operator*();
+
+  private:
+    const Vector< T > &v_;
+    size_t pos_;
+  };
 }
 
 template < class T >
