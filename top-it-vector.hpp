@@ -416,4 +416,16 @@ topit::VIter< T > topit::Vector< T >::end()
 {
   return VIter< T >(*this, size_);
 }
+
+template < class T >
+topit::VCIter< T >::VCIter(const Vector< T > &v, size_t pos):
+  v_(v),
+  pos_(pos)
+{}
+
+template < class T >
+topit::VIter< T >::VIter(Vector< T > &v, size_t pos):
+  v_(v),
+  pos_(pos)
+{}
 #endif
