@@ -9,37 +9,7 @@
 namespace topit
 {
   template < class T >
-  class Vector
-  {
-  public:
-    Vector();
-    Vector(const Vector< T > &);
-    Vector(Vector< T > &&) noexcept;
-    Vector< T > &operator=(const Vector< T > &);
-    Vector< T > &operator=(Vector< T > &&) noexcept;
-    T &operator[](size_t id) noexcept;
-    const T &operator[](size_t id) const noexcept;
-    ~Vector();
-    bool isEmpty() const noexcept;
-    void pushBack(const T &);
-    void popBack();
-    size_t getSize() const noexcept;
-    size_t getCapasity() const noexcept;
-    void swap(Vector< T > &rhs) noexcept;
-    void pushFront(const T &);
-    void popFront();
-    T &at(size_t id);
-    const T &at(size_t id) const;
-    void insert(size_t i, const T &val);
-    void erase(size_t i);
-    void insert(size_t i, const Vector< T > &rhs, size_t beg, size_t end);
-    void erase(size_t beg, size_t end);
-
-  private:
-    T *data_;
-    size_t size_, capasity_;
-    explicit Vector(size_t k);
-  };
+  class Vector;
 
   template < class T >
   struct VIter
@@ -69,6 +39,43 @@ namespace topit
   private:
     const Vector< T > &v_;
     size_t pos_;
+  };
+  template < class T >
+  class Vector
+  {
+  public:
+    Vector();
+    Vector(const Vector< T > &);
+    Vector(Vector< T > &&) noexcept;
+    Vector< T > &operator=(const Vector< T > &);
+    Vector< T > &operator=(Vector< T > &&) noexcept;
+    T &operator[](size_t id) noexcept;
+    const T &operator[](size_t id) const noexcept;
+    ~Vector();
+    bool isEmpty() const noexcept;
+    void pushBack(const T &);
+    void popBack();
+    size_t getSize() const noexcept;
+    size_t getCapasity() const noexcept;
+    void swap(Vector< T > &rhs) noexcept;
+    void pushFront(const T &);
+    void popFront();
+    T &at(size_t id);
+    const T &at(size_t id) const;
+    void insert(size_t i, const T &val);
+    void erase(size_t i);
+    void insert(size_t i, const Vector< T > &rhs, size_t beg, size_t end);
+    void erase(size_t beg, size_t end);
+
+    VIter< T > begin();
+    VCIter< T > cbegin() const;
+    VIter< T > end();
+    VCIter< T > cend() const;
+
+  private:
+    T *data_;
+    size_t size_, capasity_;
+    explicit Vector(size_t k);
   };
 }
 
@@ -314,5 +321,28 @@ void topit::Vector< T >::erase(size_t beg, size_t end)
     cpy[i] = (*this)[i + toRemove];
   }
   swap(cpy);
+}
+template < class T >
+topit::VCIter< T > topit::Vector< T >::cbegin() const
+{
+  return VCIter< T >(*this, 0);
+}
+
+template < class T >
+topit::VIter< T > topit::Vector< T >::begin()
+{
+  return VIter< T >(*this, 0);
+}
+
+template < class T >
+topit::VCIter< T > topit::Vector< T >::cend() const
+{
+  return VCIter< T >(*this, size_);
+}
+
+template < class T >
+topit::VIter< T > topit::Vector< T >::end()
+{
+  return VIter< T >(*this, size_);
 }
 #endif
