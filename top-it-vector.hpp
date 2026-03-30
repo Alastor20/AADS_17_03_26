@@ -2,6 +2,7 @@
 #define TOP_IT_VECTOR_HPP
 #include <cassert>
 #include <cstddef>
+#include <initializer_list>
 #include <memory>
 #include <stdexcept>
 #include <utility>
@@ -47,6 +48,7 @@ namespace topit
     Vector();
     Vector(const Vector< T > &);
     Vector(Vector< T > &&) noexcept;
+    explicit Vector(std::initializer_list< T > il);
     Vector< T > &operator=(const Vector< T > &);
     Vector< T > &operator=(Vector< T > &&) noexcept;
     T &operator[](size_t id) noexcept;
@@ -433,4 +435,14 @@ topit::VIter< T >::VIter(Vector< T > &v, size_t pos):
   v_(v),
   pos_(pos)
 {}
+template < class T >
+topit::Vector< T >::Vector(std::initializer_list< T > il):
+  Vector(il.size())
+{
+  size_t i = 0;
+  // for(auto it = il.begin();it!=il.end;++it)
+  for (auto &&v : il) {
+    data_[i++] = v;
+  }
+}
 #endif

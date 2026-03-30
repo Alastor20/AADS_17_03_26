@@ -210,6 +210,11 @@ bool testEraseRange()
   v.erase(1, 3);
   return v[0] == 1 && v[1] == 4 && v.getSize() == 2;
 }
+bool testInitializerListConstructor()
+{
+  topit::Vector< int > v{1, 2};
+  return v.getSize() == 2;
+}
 
 int main()
 {
@@ -236,6 +241,7 @@ int main()
       {"insert should actualy insert value", testInsert},
       {"insert shuld actualy insert range in pos", testInsertRange},
       {"erase should actualy erase range", testEraseRange},
+      {"initializer list should init vector", testInitializerListConstructor},
   };
   const size_t count = sizeof(tests) / sizeof(pair_t);
   std::cout << std::boolalpha;
