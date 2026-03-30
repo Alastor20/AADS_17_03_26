@@ -49,21 +49,31 @@ namespace topit
     Vector(const Vector< T > &);
     Vector(Vector< T > &&) noexcept;
     explicit Vector(std::initializer_list< T > il);
+
     Vector< T > &operator=(const Vector< T > &);
     Vector< T > &operator=(Vector< T > &&) noexcept;
     T &operator[](size_t id) noexcept;
     const T &operator[](size_t id) const noexcept;
+
     ~Vector();
+
     bool isEmpty() const noexcept;
-    void pushBack(const T &);
-    void popBack();
     size_t getSize() const noexcept;
     size_t getCapasity() const noexcept;
+    void reserve(size_t cap);
+    void shrinkToFit();
+
     void swap(Vector< T > &rhs) noexcept;
+
     void pushFront(const T &);
     void popFront();
+    size_t pushBachRange(VIter< T > begin, size_t k);
+    void pushBack(const T &);
+    void popBack();
+
     T &at(size_t id);
     const T &at(size_t id) const;
+
     void insert(size_t i, const T &val);
     void erase(size_t i);
     void insert(size_t i, const Vector< T > &rhs, size_t beg, size_t end);
@@ -78,6 +88,8 @@ namespace topit
     T *data_;
     size_t size_, capasity_;
     explicit Vector(size_t k);
+    // TODO: implement
+    void pushBackImpl(const T &);
   };
 }
 
@@ -444,5 +456,25 @@ topit::Vector< T >::Vector(std::initializer_list< T > il):
   for (auto &&v : il) {
     data_[i++] = v;
   }
+}
+
+template < class T >
+void topit::Vector< T >::reserve(size_t cap)
+{
+  if (cap >= capasity_) {
+    return;
+  }
+  T *d = new T[cap];
+  try {
+    for (size_t i = 0; i < getSize(); ++i) {
+      d[i] = std::move(data_[i]);
+    }
+  } catch (...) {
+    delete[] d;
+    throw;
+  }
+  delete[] data_;
+  data_ = d;
+  capasity_ = cap;
 }
 #endif
