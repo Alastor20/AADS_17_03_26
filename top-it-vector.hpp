@@ -73,7 +73,6 @@ namespace topit
 
     void pushFront(const T &);
     void popFront();
-    size_t pushBachRange(VIter< T > begin, size_t k);
     void pushBack(const T &);
     void popBack();
 
@@ -170,7 +169,7 @@ T &topit::Vector< T >::operator[](size_t id) noexcept
 template < class T >
 const T &topit::Vector< T >::operator[](size_t id) const noexcept
 {
-  assert(id < size_);
+  assert(id < getSize());
   return data_[id];
 }
 template < class T >
@@ -349,7 +348,7 @@ void topit::Vector< T >::insert(size_t i, const Vector< T > &rhs, size_t beg, si
     throw std::range_error("end less than begin");
   }
   size_t toAdd = end - beg;
-  Vector< int > cpy(size_ + toAdd);
+  Vector< T > cpy(size_ + toAdd);
   try {
     for (; cpy.size_ < i; ++cpy.size_) {
       new (cpy.data_ + cpy.size_) T((*this)[cpy.size_]);
