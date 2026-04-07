@@ -427,13 +427,13 @@ topit::VIter< T > &topit::VIter< T >::operator++() noexcept
 template < class T >
 const T &topit::VCIter< T >::operator*()
 {
-  v_.at(pos_);
+  return v_.at(pos_);
 }
 
 template < class T >
 T &topit::VIter< T >::operator*()
 {
-  v_.at(pos_);
+  return v_.at(pos_);
 }
 
 template < class T >
