@@ -176,7 +176,7 @@ const T &topit::Vector< T >::operator[](size_t id) const noexcept
 template < class T >
 topit::Vector< T >::Vector(size_t k):
   data_(static_cast< T * >(::operator new(sizeof(T) * k))),
-  size_(k),
+  size_(0),
   capasity_(k)
 {}
 
