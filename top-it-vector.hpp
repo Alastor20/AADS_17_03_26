@@ -20,11 +20,14 @@ namespace topit
     bool operator!=(const VIter< T > &) const noexcept;
     VIter< T > &operator++() noexcept;
     VIter< T > &operator--() noexcept;
+    VIter< T > operator+(size_t i) noexcept;
+    VIter< T > operator-(size_t i) noexcept;
     T &operator*();
 
   private:
     Vector< T > &v_;
     size_t pos_;
+    friend class Vector< T >;
   };
 
   template < class T >
@@ -35,11 +38,14 @@ namespace topit
     bool operator!=(const VCIter< T > &) const noexcept;
     VCIter< T > &operator++() noexcept;
     VCIter< T > &operator--() noexcept;
+    VCIter< T > operator+(size_t i) noexcept;
+    VCIter< T > operator-(size_t i) noexcept;
     const T &operator*();
 
   private:
     const Vector< T > &v_;
     size_t pos_;
+    friend class Vector< T >;
   };
   template < class T >
   class Vector
@@ -79,6 +85,13 @@ namespace topit
     void insert(size_t i, const Vector< T > &rhs, size_t beg, size_t end);
     void erase(size_t beg, size_t end);
 
+    void insert(VIter< T > pos, VIter< T > beg, VIter< T > end);
+    void insert(VIter< T > pos, const T &value);
+    void insert(const T &value, size_t count, VIter< T > pos);
+    void erase(VIter< T > beg, VIter< T > end);
+    void erase(VIter< T > pos);
+    void erase(VIter< T > pos, size_t count);
+
     VIter< T > begin();
     VCIter< T > cbegin() const;
     VIter< T > end();
@@ -89,6 +102,7 @@ namespace topit
     size_t size_, capasity_;
     explicit Vector(size_t k);
     void pushBackImpl(const T &);
+    void reserve(size_t pos, size_t k);
   };
   template < class T >
   void clear(T *data, size_t to_pos);
@@ -105,8 +119,13 @@ template < class T >
 topit::Vector< T >::Vector(const Vector< T > &rhs):
   Vector(rhs.getSize())
 {
-  for (size_t i = 0; i < size_; ++i) {
-    data_[i] = rhs[i];
+  try {
+    for (; size_ < rhs.getSize(); ++size_) {
+      new (data_ + size_) T(rhs[size_]);
+    }
+  } catch (...) {
+    clear(data_, size_);
+    throw;
   }
 }
 
@@ -519,5 +538,135 @@ void topit::clear(T *data, size_t count)
   for (size_t j = 0; j < count; ++j) {
     (data + j)->~T();
   }
+}
+template < class T >
+void topit::Vector< T >::shrinkToFit()
+{
+  Vector< T > cpy(*this);
+  swap(cpy);
+}
+template < class T >
+void topit::Vector< T >::reserve(size_t pos, size_t k)
+{
+  if (pos > size_) {
+    throw std::out_of_range("Pos more than size");
+  }
+  Vector< T > cpy(size_ + k);
+  try {
+    for (; cpy.size_ < pos; ++cpy.size_) {
+      new (cpy.data_ + cpy.size_) T((*this)[cpy.size_]);
+    }
+    for (; cpy.size_ < size_; ++cpy.size_) {
+      new (cpy.data_ + cpy.size_ + k) T((*this)[cpy.size_]);
+    }
+  } catch (...) {
+    for (size_t i = 0; i < pos; ++i) {
+      (cpy.data_ + i)->~T();
+    }
+    for (size_t i = pos; i < cpy.size_; ++i) {
+      (cpy.data_ + i + k)->~T();
+    }
+    ::operator delete(cpy.data_);
+    throw;
+  }
+  swap(cpy);
+}
+template < class T >
+topit::VCIter< T > topit::VCIter< T >::operator-(size_t i) noexcept
+{
+  VCIter< T > iter(v_, pos_ - i);
+  return iter;
+}
+
+template < class T >
+topit::VCIter< T > topit::VCIter< T >::operator+(size_t i) noexcept
+{
+  VCIter< T > iter(v_, pos_ + i);
+  return iter;
+}
+
+template < class T >
+topit::VIter< T > topit::VIter< T >::operator-(size_t i) noexcept
+{
+  VIter< T > iter(v_, pos_ - i);
+  return iter;
+}
+
+template < class T >
+topit::VIter< T > topit::VIter< T >::operator+(size_t i) noexcept
+{
+  VIter< T > iter(v_, pos_ + i);
+  return iter;
+}
+template < class T >
+void topit::Vector< T >::erase(VIter< T > pos, size_t count)
+{
+  erase(pos.pos_, pos.pos_ + count);
+}
+
+template < class T >
+void topit::Vector< T >::erase(VIter< T > pos)
+{
+  erase(pos.pos_);
+}
+
+template < class T >
+void topit::Vector< T >::erase(VIter< T > beg, VIter< T > end)
+{
+  erase(beg.pos_, end.pos_);
+}
+template < class T >
+void topit::Vector< T >::insert(const T &value, size_t count, VIter< T > pos)
+{
+  Vector< T > cpy(size_ + count);
+  try {
+    for (; cpy.size_ < pos.pos_; ++cpy.size_) {
+      new (cpy.data_ + cpy.size_) T((*this).at(cpy.size_));
+    }
+    for (size_t i = 0; i < count; ++i) {
+      new (cpy.data_ + cpy.size_++) T(value);
+    }
+    for (; pos != (*this).end(); ++pos) {
+      new (cpy.data_ + cpy.size_++) T(*pos);
+    }
+  } catch (...) {
+    clear(cpy.data_, cpy.size_);
+    ::operator delete(cpy.data_);
+    throw;
+  }
+  swap(cpy);
+}
+
+template < class T >
+void topit::Vector< T >::insert(VIter< T > pos, const T &val)
+{
+  insert(pos.pos_, val);
+}
+template < class T >
+void topit::Vector< T >::insert(VIter< T > pos, VIter< T > beg, VIter< T > end)
+{
+  size_t count = 0;
+  VIter< T > cpyBeg = beg;
+  while (cpyBeg != end) {
+    ++count;
+    ++cpyBeg;
+  }
+  Vector< T > cpy(size_ + count);
+  try {
+    for (; cpy.size_ < pos.pos_; ++cpy.size_) {
+      new (cpy.data_ + cpy.size_) T((*this).at(cpy.size_));
+    }
+    for (; beg != end; ++beg) {
+      new (cpy.data_ + cpy.size_++) T(*beg);
+    }
+    for (; pos != (*this).end(); ++pos) {
+      new (cpy.data_ + cpy.size_++) T(*pos);
+    }
+  } catch (...) {
+    clear(cpy.data_, cpy.size_);
+    ::operator delete(cpy.data_);
+    throw;
+  }
+  swap(cpy);
 }
 #endif
