@@ -222,7 +222,6 @@ void topit::Vector< T >::pushFront(const T &val)
     }
   } catch (...) {
     clear(cpy.data_, cpy.size_);
-    ::operator delete(cpy.data_);
     throw;
   }
   swap(cpy);
@@ -241,7 +240,6 @@ void topit::Vector< T >::popFront()
     }
   } catch (...) {
     clear(cpy.data_, cpy.size_);
-    ::operator delete(cpy.data_);
     throw;
   }
   swap(cpy);
@@ -307,7 +305,6 @@ void topit::Vector< T >::insert(size_t i, const T &val)
     }
   } catch (...) {
     clear(cpy.data_, cpy.size_);
-    ::operator delete(cpy.data_);
     throw;
   }
   swap(cpy);
@@ -329,7 +326,6 @@ void topit::Vector< T >::erase(size_t i)
     }
   } catch (...) {
     clear(cpy.data_, cpy.size_);
-    ::operator delete(cpy.data_);
     throw;
   }
   swap(cpy);
@@ -361,7 +357,6 @@ void topit::Vector< T >::insert(size_t i, const Vector< T > &rhs, size_t beg, si
     }
   } catch (...) {
     clear(cpy.data_, cpy.size_);
-    ::operator delete(cpy.data_);
     throw;
   }
   swap(cpy);
@@ -389,7 +384,6 @@ void topit::Vector< T >::erase(size_t beg, size_t end)
     }
   } catch (...) {
     clear(cpy.data_, cpy.size_);
-    ::operator delete(cpy.data_);
     throw;
   }
   swap(cpy);
@@ -522,11 +516,9 @@ void topit::Vector< T >::reserve(size_t cap)
     }
   } catch (...) {
     clear(d, i);
-    ::operator delete(d);
     throw;
   }
   clear(data_, size_);
-  ::operator delete(data_);
   data_ = d;
   capasity_ = cap;
 }
@@ -537,6 +529,7 @@ void topit::clear(T *data, size_t count)
   for (size_t j = 0; j < count; ++j) {
     (data + j)->~T();
   }
+  ::operator delete(data);
 }
 template < class T >
 void topit::Vector< T >::shrinkToFit()
@@ -565,7 +558,6 @@ void topit::Vector< T >::reserve(size_t pos, size_t k)
     for (size_t i = pos; i < cpy.size_; ++i) {
       (cpy.data_ + i + k)->~T();
     }
-    ::operator delete(cpy.data_);
     throw;
   }
   swap(cpy);
@@ -618,20 +610,14 @@ template < class T >
 void topit::Vector< T >::insert(const T &value, size_t count, VIter< T > pos)
 {
   Vector< T > cpy(size_ + count);
-  try {
-    for (; cpy.size_ < pos.pos_; ++cpy.size_) {
-      new (cpy.data_ + cpy.size_) T((*this).at(cpy.size_));
-    }
-    for (size_t i = 0; i < count; ++i) {
-      new (cpy.data_ + cpy.size_++) T(value);
-    }
-    for (; pos != (*this).end(); ++pos) {
-      new (cpy.data_ + cpy.size_++) T(*pos);
-    }
-  } catch (...) {
-    clear(cpy.data_, cpy.size_);
-    ::operator delete(cpy.data_);
-    throw;
+  for (; cpy.size_ < pos.pos_; ++cpy.size_) {
+    new (cpy.data_ + cpy.size_) T((*this).at(cpy.size_));
+  }
+  for (size_t i = 0; i < count; ++i) {
+    new (cpy.data_ + cpy.size_++) T(value);
+  }
+  for (; pos != (*this).end(); ++pos) {
+    new (cpy.data_ + cpy.size_++) T(*pos);
   }
   swap(cpy);
 }
@@ -651,20 +637,14 @@ void topit::Vector< T >::insert(VIter< T > pos, VIter< T > beg, VIter< T > end)
     ++cpyBeg;
   }
   Vector< T > cpy(size_ + count);
-  try {
-    for (; cpy.size_ < pos.pos_; ++cpy.size_) {
-      new (cpy.data_ + cpy.size_) T((*this).at(cpy.size_));
-    }
-    for (; beg != end; ++beg) {
-      new (cpy.data_ + cpy.size_++) T(*beg);
-    }
-    for (; pos != (*this).end(); ++pos) {
-      new (cpy.data_ + cpy.size_++) T(*pos);
-    }
-  } catch (...) {
-    clear(cpy.data_, cpy.size_);
-    ::operator delete(cpy.data_);
-    throw;
+  for (; cpy.size_ < pos.pos_; ++cpy.size_) {
+    new (cpy.data_ + cpy.size_) T((*this).at(cpy.size_));
+  }
+  for (; beg != end; ++beg) {
+    new (cpy.data_ + cpy.size_++) T(*beg);
+  }
+  for (; pos != (*this).end(); ++pos) {
+    new (cpy.data_ + cpy.size_++) T(*pos);
   }
   swap(cpy);
 }
